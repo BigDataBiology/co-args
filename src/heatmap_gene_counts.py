@@ -16,6 +16,7 @@ meta = meta.filter(pl.col("habitat") == HABITAT) \
 
 with lzma.open(f"./data/{TOOL}.projected.normed10m.tsv.xz", 'rb') as f:
     df = pl.read_csv(f, separator='\t')
+df = df.filter(pl.col('sample').is_in(meta.select(['sample_id'])))
 
 freq = df.select(cs.by_dtype(pl.Int64)) \
         .select(pl.col("*") > 0) \
