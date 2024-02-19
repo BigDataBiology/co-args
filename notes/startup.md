@@ -7,16 +7,16 @@ mkdir co-args
 cd co-args
 git init 
 mkdir notes
-conda create -n co-args python=3.11 numpy matplotlib jug 
+conda create -n co-args python=3.11 numpy matplotlib jug
 conda activate co-args
-conda install polars seaborn
+conda install polars seaborn pytest
 ```
 
 ### Packages
 
 - [Polars](https://pola.rs/)
 - [Jug](https://jug.rtfd.io/)
-
+- [pytest](https://pytest.org/)
 
 ## Retrieve data
 
