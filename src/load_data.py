@@ -23,6 +23,8 @@ def load_data(tool, habitat, min_nr_inserts=2_000_000):
 
     with lzma.open(f"./data/{tool}.projected.normed10m.tsv.xz", 'rb') as f:
         df = pl.read_csv(f, separator='\t')
+    if tool == 'deeparg':
+        df = df.rename({'':'sample'})
     df = df.filter(pl.col('sample').is_in(meta.select(['sample_id'])))
     return df
 

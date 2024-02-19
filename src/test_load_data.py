@@ -7,3 +7,7 @@ def test_load_data():
     assert df.shape[0] == 129
     df = load_data('rgi', 'dog gut')
     assert df.shape[0] == 129
+
+    # deeparg requires special casing so add test for it
+    df = load_data('deeparg', 'dog gut')
+    assert df.shape[0] == 129
