@@ -1,3 +1,16 @@
+ALL_TOOLS = [
+    'abricate_ARG_ANNOT',
+    'abricate_CARD',
+    'abricate_MEGARES',
+    'abricate_NCBI',
+    'abricate_RESFINDER_FG2',
+    'abricate_RESFINDER',
+    'deeparg',
+    'rgi',
+    'rgi_strict',
+    ]
+
+
 def load_data(tool, habitat, min_nr_inserts=2_000_000):
     '''
     Load data for a given ARG annotation tool and habitat
