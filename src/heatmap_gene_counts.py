@@ -6,17 +6,12 @@ import lzma
 import seaborn as sns
 from scipy import cluster, spatial
 
+from load_data import load_data
+
 TOOL = 'rgi_strict'
 HABITAT = 'human gut'
-MIN_NR_INSERTS = 2_000_000
 
-meta = pl.read_csv("./data/GMGC10.sample.meta.tsv.gz", separator='\t')
-meta = meta.filter(pl.col("habitat") == HABITAT) \
-        .filter(pl.col("insertsHQ") > MIN_NR_INSERTS)
-
-with lzma.open(f"./data/{TOOL}.projected.normed10m.tsv.xz", 'rb') as f:
-    df = pl.read_csv(f, separator='\t')
-df = df.filter(pl.col('sample').is_in(meta.select(['sample_id'])))
+df = load_data(TOOL, HABITAT)
 
 freq = df.select(cs.by_dtype(pl.Int64)) \
         .select(pl.col("*") > 0) \

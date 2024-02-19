@@ -4,4 +4,4 @@
 
 For next time:
 
-- start internal "library" (`load_data.py`)
+- [x] start internal "library" (`load_data.py`)
