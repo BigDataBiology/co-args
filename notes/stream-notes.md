@@ -7,7 +7,8 @@ RGI & deepARG have the most genes in the 20-80% range.
 
 For next time:
 
-- [ ] use argNorm to look at some clusters
+- [ ] use the antibiotic resistance ontology (ARO) to look at some clusters
+- [ ] use argNorm to normalize deepARG results to ARO
 
 Eventually:
 
