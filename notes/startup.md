@@ -9,7 +9,7 @@ git init
 mkdir notes
 conda create -n co-args python=3.11 numpy matplotlib jug
 conda activate co-args
-conda install polars seaborn pytest
+conda install polars seaborn pytest pronto
 ```
 
 ### Packages
@@ -17,6 +17,7 @@ conda install polars seaborn pytest
 - [Polars](https://pola.rs/)
 - [Jug](https://jug.rtfd.io/)
 - [pytest](https://pytest.org/)
+- [pronto](https://pronto.readthedocs.io/)
 
 ## Retrieve data
 
@@ -46,3 +47,8 @@ cd GMGC10.data/metadata
 git-annex get GMGC10.sample.meta.tsv.gz
 ```
 
+### ARO OBO file
+
+You need to obtain the aro.obo file from https://card.mcmaster.ca/download
+
+Because of a [pronto issue](https://github.com/althonos/pronto/issues/140), we need the OBO format file and not the OWL file.
