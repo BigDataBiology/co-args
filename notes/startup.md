@@ -18,6 +18,10 @@ conda install polars seaborn pytest pronto
 - [Jug](https://jug.rtfd.io/)
 - [pytest](https://pytest.org/)
 - [pronto](https://pronto.readthedocs.io/)
+- [argNorm](https://github.com/BigDataBiology/argNorm)
+
+
+`argNorm` should be installed from git as we are using the development version.
 
 ## Retrieve data
 
