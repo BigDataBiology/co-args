@@ -52,8 +52,13 @@ ax.set_title(f'Gene co-occurrence in {tool} ({HABITAT})')
 fig.tight_layout()
 interesting_reordered = [interesting[i] for i in leaves]
 
-
 aro = pronto.Ontology('aro.obo')
+confers_resistance_to_drug_class = aro.get_relationship('confers_resistance_to_drug_class')
+confers_resistance_to_antibiotic = aro.get_relationship('confers_resistance_to_antibiotic')
+
+AB_MOLECULE_ARO = 'ARO:1000003'
+assert aro[AB_MOLECULE_ARO].name == 'antibiotic molecule'
+Ab_classes = set(aro[AB_MOLECULE_ARO].subclasses(1, with_self=False))
 name2term = {}
 for k in aro.keys():
     if k.startswith('ARO:'):
@@ -76,7 +81,19 @@ for _,row in aro_map_table[['GeneFamily', 'ARO']].iterrows():
 
 for c in cluster:
     print(c)
+    cur_ab_classes = set()
+    all_superclasses = set()
     for a in by_family[c]:
-        print(f'  {aro[a].name} ({a})')
-        for s in aro[a].superclasses():
-            print(f'         {s.name} ({s.id})')
+        all_superclasses.update(aro[a].superclasses())
+    for p in all_superclasses:
+        for ab in p.relationships.get(confers_resistance_to_antibiotic, []):
+            cur_ab_classes.update( set(ab.superclasses()) & Ab_classes )
+        for dc in p.relationships.get(confers_resistance_to_drug_class, []):
+            cur_ab_classes.update( set(dc.superclasses()) & Ab_classes )
+
+    for ab in cur_ab_classes:
+        print(f'  {ab.name} ({ab.id})')
+    print(f'  superclasses:')
+    for s in aro[a].superclasses():
+        print(f'         {s.name} ({s.id})')
+
