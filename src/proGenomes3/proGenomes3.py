@@ -41,9 +41,33 @@ def download_genomes(specI, genomes):
                 f.write(chunk)
     return f'data/{specI}'
 
+
+@TaskGenerator
+def run_rgi_for_all_genomes(specI_dir):
+    from glob import glob
+    import subprocess
+    rgi_outs = []
+    for g in glob(f'{specI_dir}/*.fna.gz'):
+        rgi_out = g.replace('.fna.gz', '.rgi.out')
+        subprocess.check_call(
+            ['conda', 'run', '-n', 'rgi',
+             'rgi', 'main',
+             '-t', 'contig',
+             '-a', 'DIAMOND',
+             '-n', '8',
+             '--include_loose',
+             '--clean',
+             '--split_prodigal_jobs',
+             '--input_sequence', g,
+             '--output_file', rgi_out])
+        rgi_outs.append(rgi_out)
+    return rgi_outs
+
 clustering_table = parse_clustering_table(download_clustering_table())
 clusters = bvalue(clustering_table)
 
+rgi_results = []
 for k,genomes in clusters.items():
-    download_genomes(k, genomes)
+    spI = download_genomes(k, genomes)
+    rgi_results.append(run_rgi_for_all_genomes(spI))
 

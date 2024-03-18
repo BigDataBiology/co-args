@@ -4,6 +4,8 @@
 
 We wrote code to download [proGenomes](https://progenomes.embl.de/), organised by specI cluster (a specI cluster is going to be our definition of _species_).
 
+We created a separate conda environment to run rgi (called `rgi`) and use `conda run` to call `rgi`. We then wrote code to run `rgi` on every genome.
+
 ## 2024-02-20 (Stream 4)
 
 We generated heatmaps for all the tools.

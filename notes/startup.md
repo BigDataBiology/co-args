@@ -12,6 +12,12 @@ conda activate co-args
 conda install polars seaborn pytest pronto requests ipython
 ```
 
+For running RGI, we need a separate environment, which we will call simply `rgi`:
+
+```bash
+conda create -n rgi rgi
+```
+
 ### Packages
 
 - [Polars](https://pola.rs/)
