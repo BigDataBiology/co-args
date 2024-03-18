@@ -9,7 +9,7 @@ git init
 mkdir notes
 conda create -n co-args python=3.11 numpy matplotlib jug
 conda activate co-args
-conda install polars seaborn pytest pronto
+conda install polars seaborn pytest pronto requests
 ```
 
 ### Packages
@@ -18,6 +18,7 @@ conda install polars seaborn pytest pronto
 - [Jug](https://jug.rtfd.io/)
 - [pytest](https://pytest.org/)
 - [pronto](https://pronto.readthedocs.io/)
+- [requests](https://requests.readthedocs.io/)
 
 ## Retrieve data
 
