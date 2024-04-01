@@ -41,6 +41,7 @@ def sample_genomes(genomes, max_nr_genomes):
 def download_genomes(specI, genomes, max_nr_genomes):
     import requests
     os.makedirs(f'data/{specI}', exist_ok=True)
+    downloaded = []
     for g in sample_genomes(genomes, max_nr_genomes):
         tax = g.split('.')[0]
         oname = f'data/{specI}/{g}.fna.gz'
@@ -51,16 +52,18 @@ def download_genomes(specI, genomes, max_nr_genomes):
         with atomicwrites.atomic_write(oname, mode='wb', overwrite=True) as f:
             for chunk in r.iter_content(chunk_size=8192):
                 f.write(chunk)
-    return f'data/{specI}'
-
+        downloaded.append(oname)
+    return downloaded
 
 @TaskGenerator
-def run_rgi_for_all_genomes(specI_dir):
-    from glob import glob
+def run_rgi_for_all_genomes(genomes):
     import subprocess
-    rgi_outs = []
-    for g in glob(f'{specI_dir}/*.fna.gz'):
+    results = []
+    for g in genomes:
         rgi_out = g.replace('.fna.gz', '.rgi.out')
+        results.append(rgi_out)
+        if os.path.exists(rgi_out+'.json'):
+            continue
         subprocess.check_call(
             ['conda', 'run', '-n', 'rgi',
              'rgi', 'main',
@@ -71,9 +74,11 @@ def run_rgi_for_all_genomes(specI_dir):
              '--clean',
              '--split_prodigal_jobs',
              '--input_sequence', g,
-             '--output_file', rgi_out])
-        rgi_outs.append(rgi_out)
-    return rgi_outs
+             '--output_file', rgi_out+'-tmp'])
+        os.rename(rgi_out+'-tmp.txt', rgi_out+'.txt')
+        os.rename(rgi_out+'-tmp.json', rgi_out+'.json')
+    return results
+
 
 clustering_table = parse_clustering_table(download_clustering_table())
 clusters = bvalue(clustering_table)
