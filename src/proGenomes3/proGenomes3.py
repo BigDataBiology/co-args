@@ -1,5 +1,8 @@
 from jug import TaskGenerator, bvalue
 import os
+import atomicwrites
+
+MAX_NR_GENOMES = 10
 
 @TaskGenerator
 def download_clustering_table():
@@ -25,18 +28,27 @@ def parse_clustering_table(oname):
             specIs[specI] = genomes.split(';')
     return specIs
 
+def sample_genomes(genomes, max_nr_genomes):
+    if len(genomes) <= max_nr_genomes:
+        return genomes
+    import random
+    genomes = genomes[:]
+    genomes.sort()
+    random.seed(genomes[max_nr_genomes])
+    return random.sample(genomes, max_nr_genomes)
+
 @TaskGenerator
-def download_genomes(specI, genomes):
+def download_genomes(specI, genomes, max_nr_genomes):
     import requests
     os.makedirs(f'data/{specI}', exist_ok=True)
-    for g in genomes:
+    for g in sample_genomes(genomes, max_nr_genomes):
         tax = g.split('.')[0]
         oname = f'data/{specI}/{g}.fna.gz'
         if os.path.exists(oname):
             continue
         url = f'https://progenomes.embl.de/dumpSequence.cgi?p={g}&t=c&a={tax}'
         r = requests.get(url, allow_redirects=True, stream=True)
-        with open(oname, 'wb') as f:
+        with atomicwrites.atomic_write(oname, mode='wb', overwrite=True) as f:
             for chunk in r.iter_content(chunk_size=8192):
                 f.write(chunk)
     return f'data/{specI}'
@@ -68,6 +80,6 @@ clusters = bvalue(clustering_table)
 
 rgi_results = []
 for k,genomes in clusters.items():
-    spI = download_genomes(k, genomes)
+    spI = download_genomes(k, genomes, MAX_NR_GENOMES)
     rgi_results.append(run_rgi_for_all_genomes(spI))
 
