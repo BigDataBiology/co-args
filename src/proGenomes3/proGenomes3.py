@@ -79,6 +79,24 @@ def run_rgi_for_all_genomes(genomes):
         os.rename(rgi_out+'-tmp.json', rgi_out+'.json')
     return results
 
+@TaskGenerator
+def concat_partials(fs: list[str]) -> str:
+    import polars as pl
+    import polars.selectors as cs
+    import pathlib
+
+    partials = []
+    for f in fs:
+        path = pathlib.Path(f + '.txt')
+        genome = path.stem.replace('.rgi.out', '')
+        table = pl.read_csv(path, separator='\t', dtypes={'Nudged':bool})
+        table = table.with_columns(pl.lit(genome).alias('genome'))
+        partials.append(table)
+    table = pl.concat(partials)
+    oname = path.parent / 'rgi-concat.tsv'
+    table.write_csv(oname, separator='\t')
+    return oname
+
 
 clustering_table = parse_clustering_table(download_clustering_table())
 clusters = bvalue(clustering_table)
@@ -86,5 +104,6 @@ clusters = bvalue(clustering_table)
 rgi_results = []
 for k,genomes in clusters.items():
     spI = download_genomes(k, genomes, MAX_NR_GENOMES)
-    rgi_results.append(run_rgi_for_all_genomes(spI))
+    rgi_results.append(concat_partials(run_rgi_for_all_genomes(spI)))
+
 
