@@ -84,6 +84,7 @@ def concat_partials(fs: list[str]) -> str:
     import polars as pl
     import polars.selectors as cs
     import pathlib
+    import lzma
 
     partials = []
     for f in fs:
@@ -93,8 +94,9 @@ def concat_partials(fs: list[str]) -> str:
         table = table.with_columns(pl.lit(genome).alias('genome'))
         partials.append(table)
     table = pl.concat(partials)
-    oname = path.parent / 'rgi-concat.tsv'
-    table.write_csv(oname, separator='\t')
+    oname = path.parent / 'rgi-concat.tsv.xz'
+    with lzma.open(oname, 'wt') as f:
+        table.write_csv(f, separator='\t')
     return oname
 
 
