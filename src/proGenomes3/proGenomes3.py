@@ -76,7 +76,7 @@ def run_rgi_for_all_genomes(genomes):
              '--input_sequence', g,
              '--output_file', rgi_out+'-tmp'])
         os.rename(rgi_out+'-tmp.txt', rgi_out+'.txt')
-        os.rename(rgi_out+'-tmp.json', rgi_out+'.json')
+        # We do not keep the JSON versions because they take up too much diskspace
     return results
 
 @TaskGenerator
