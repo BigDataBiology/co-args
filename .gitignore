@@ -2,3 +2,4 @@ data/
 __pycache__/
 *.jugdata/
 /src/plots
+.jugstatus.sqlite3
