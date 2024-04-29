@@ -1,5 +1,9 @@
 # Stream notes
 
+## 2024-04-30 
+
+We had processed proGenomes _by biosample_ and not _by genome_, thus often having multiple entries for the same genome.
+
 ## 2024-04-19 
 
 We wrote code to download [proGenomes](https://progenomes.embl.de/), organised by specI cluster (a specI cluster is going to be our definition of _species_).
